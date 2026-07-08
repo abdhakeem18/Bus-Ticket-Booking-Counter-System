@@ -1,0 +1,108 @@
+@startuml
+title Bus Ticket Booking Counter System - Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+left to right direction
+
+abstract class K2534816Person {
+  - name : String
+  - contactNumber : String
+  + getName() : String
+  + getContactNumber() : String
+}
+
+class K2534816Customer {
+  - nicPassport : String
+  + getNicPassport() : String
+}
+
+class K2534816Booking {
+  - bookingId : String
+  - travelDate : LocalDate
+  - seatNumber : int
+  - reservationDate : LocalDate
+  - status : BookingStatus
+  + generateTicket() : String
+}
+
+class K2534816FareBreakdown {
+  - baseFare : double
+  - discount : double
+  - bookingFee : double
+  - tax : double
+  - total : double
+}
+
+class K2534816FareCalculator {
+  + calculateFare() : K2534816FareBreakdown
+}
+
+class K2534816BookingService {
+  - bookings : ArrayList<K2534816Booking>
+  + createBooking() : K2534816Booking
+  + updateBooking() : void
+  + cancelBooking() : boolean
+  + searchBooking() : List<K2534816Booking>
+  - validateDuplicateBooking() : void
+}
+
+interface K2534816BookingRepository {
+  + loadBookings() : List<K2534816Booking>
+  + saveBookings() : void
+}
+
+class K2534816BookingFileRepository {
+  - filePath : String
+  + loadBookings() : List<K2534816Booking>
+  + saveBookings() : void
+}
+
+class K2534816TicketPrinter {
+  + printTicket() : String
+}
+
+class K2534816MainFrame {
+  + displayDashboard() : void
+}
+
+enum K2534816Route {
+  JAFFNA
+  MATARA
+  BADULLA
+}
+
+enum K2534816BusType {
+  STANDARD
+  LUXURY
+}
+
+enum K2534816TravelType {
+  ONE_WAY
+  RETURN
+}
+
+enum K2534816BookingStatus {
+  ACTIVE
+  CANCELLED
+}
+
+K2534816Customer --|> K2534816Person
+
+K2534816Booking *-- K2534816Customer : customer
+K2534816Booking *-- K2534816FareBreakdown : fare
+K2534816Booking --> K2534816Route : destination
+K2534816Booking --> K2534816BusType : bus type
+K2534816Booking --> K2534816TravelType : travel type
+K2534816Booking --> K2534816BookingStatus : status
+
+K2534816BookingService o-- K2534816Booking : manages
+K2534816BookingService --> K2534816FareCalculator : uses
+K2534816BookingService --> K2534816BookingRepository : saves/loads
+K2534816BookingFileRepository ..|> K2534816BookingRepository
+
+K2534816TicketPrinter --> K2534816Booking : prints
+K2534816MainFrame --> K2534816BookingService : uses
+
+@enduml
